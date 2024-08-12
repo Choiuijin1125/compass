@@ -1,0 +1,5 @@
+declare module "react-syntax-highlighter"
+declare module "react-syntax-highlighter/*"
+declare module "uuid"
+declare module "tailwindcss"
+declare module "dompurify"

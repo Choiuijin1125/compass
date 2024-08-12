@@ -1,0 +1,8 @@
+firebase-admin
+redis
+google-generativeai
+grpcio==1.64.0
+pillow
+PyPDF2
+python-docx
+pyyaml

@@ -1,0 +1,17 @@
+/*  */
+.pr-block {
+  background: #f6f6f6;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 10px 0px;
+}
+
+/*  */
+p:has(span.math-tex) {
+  /* background: aquamarine; */
+  background: #f6f6f6;
+  border-radius: 8px;
+  margin: 10px 0px;
+  padding: 10px;
+  text-align: center;
+}
