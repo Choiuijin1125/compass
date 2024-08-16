@@ -1,6 +1,10 @@
-import type { Config } from "tailwindcss";
+// import type { Config } from "tailwindcss"
+import tailwindConfig from "tailwindcss/defaultConfig"
 
-const config = {
+// 이 부분에서 Tailwind의 Config 타입을 추출
+type Config = typeof tailwindConfig
+
+const config: Config = {
   darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
@@ -75,6 +79,6 @@ const config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-} satisfies Config;
+} 
 
 export default config;
