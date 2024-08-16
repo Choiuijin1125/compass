@@ -11,18 +11,6 @@ import {
 } from "firebase/firestore";
 import { useEffect, useMemo, useState, useCallback } from "react";
 
-type FileType = "FOLDER" | "FILE"
-
-interface FileData {
-  basename: string;
-  file_id: string;
-  file_type: "FOLDER" | "FILE";
-  path: string;
-  children: FileData[];
-}
-
-type RootFile = "core_memory_files" | "recall_memory_files";
-
 interface FileExplorerProps {
   userId: string | undefined;
   rootFile: RootFile;
