@@ -49,36 +49,6 @@ const NavLayout = ({threadId}: Props) => {
     return unsubscribe;
   }, [uid, ThreadCollection]);  
 
-  const [questionThreadList, setQuestionThreadList] = useState<any[]>([]);
-  const [questionThreadListLoading, setQuestionThreadListLoading] = useState(false);
-
-  const QuestionThreadCollection = useMemo(
-    () =>
-      collection(
-        getFirestore(),
-        `users/${uid}/questions/`
-      ) as CollectionReference<any>,
-    [uid]
-  );  
-
-  useEffect(() => {
-    if (!uid) return;
-    setQuestionThreadListLoading(true)
-    const unsubscribe = onSnapshot(
-      query(QuestionThreadCollection, orderBy("createTime", "asc")),
-      (snapshot) => {
-        const threads = snapshot.docs.map((doc) => ({
-          id: doc.id,
-        }));
-        setQuestionThreadListLoading(false)
-        setQuestionThreadList(threads);
-      }
-    );
-    return unsubscribe;
-  }, [uid, QuestionThreadCollection]);  
-
-
-
   return (
     <div className="side-container h-[100%] flex flex-col justify-between pb-6 min-w-[250px]">
       <div className="side-top flex flex-col items-baseline p-6">
@@ -125,59 +95,6 @@ const NavLayout = ({threadId}: Props) => {
                           <span
                             className="cursor-pointer"
                             onClick={() => router.push(`/threads/${x.id}`)}
-                          >
-                            {x.id}
-                          </span>
-                        </div>
-                      ),
-                      variant: "ghost",
-                    };
-                  }),
-                },
-              ]}
-            />
-          )
-        )}
-
-        <p className="title font-bold text-xl my-3">Study</p>
-        <Button
-          className="flex items-center justify-start gap-2 w-full"
-          onClick={() => router.push("/questions")}
-        >
-          <Image src="/icon/play_white.svg" alt="" width={18} height={18} />
-          question
-        </Button>
-        {questionThreadListLoading ? (
-          <div className="w-full">
-            <p className="flex gap-[2px] items-center text-[0.9rem] font-semibold mt-[14px] pl-[18px]">
-              <Inbox className="mr-2 h-4 w-4" /> My study
-            </p>
-            <div className="h-[45vh] w-full flex justify-center items-center">
-              <LoadingSpinner />
-            </div>
-          </div>
-        ) : (
-          questionThreadList?.length !== 0 && (
-            <Nav
-              isFullWidth={true}
-              isCollapsed={false}
-              links={[
-                {
-                  title: "My study",
-                  icon: Inbox,
-                  variant: "ghost",
-                  children: questionThreadList.map((x: any) => {
-                    return {
-                      title: (
-                        <div
-                          className={`
-                      flex justify-between w-full
-                      ${threadId === x.id && "text-[#3B82F6]"}
-                    `}
-                        >
-                          <span
-                            className="cursor-pointer"
-                            onClick={() => router.push(`/questions/${x.id}`)}
                           >
                             {x.id}
                           </span>
