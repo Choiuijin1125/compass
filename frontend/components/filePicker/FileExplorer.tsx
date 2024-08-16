@@ -50,10 +50,9 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
   useEffect(() => {
     if (!userId) return;
     if (!threadId) return;
-    const current = pathName.split("/")[1]; // threads, etc....
 
     const db = getFirestore();
-    const threadDocRef = doc(db, "users", userId, current, threadId);
+    const threadDocRef = doc(db, "users", userId, "threads", threadId);
 
     // onSnapshot을 사용하여 실시간 업데이트 수신
     const unsubscribe = onSnapshot(
@@ -95,9 +94,8 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
     if (!threadId) return;
     if (!rootFile) return;
 
-    const current = pathName.split("/")[1]; // threads, etc....
     const db = getFirestore();
-    const threadDocRef = doc(db, "users", userId, current, threadId);
+    const threadDocRef = doc(db, "users", userId, "threads", threadId);
 
     // Firestore에 checkItems 업데이트
     const updateCheckItems = async () => {
