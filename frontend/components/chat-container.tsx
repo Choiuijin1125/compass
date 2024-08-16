@@ -15,16 +15,11 @@
  */
 
 import React from "react";
-import MarkdownContainer from "@/components/markdown-container";
 import useAutoFocus from "@/app/hooks/use-auto-focus";
 import { MessageData } from "@/lib/message";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import tidotStyles from "./tidot.module.css";
-import markdownStlyes from "./markdown.module.css";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "./common/scrollStyle.css";
 import CodeContainer from "./code-container";
 
@@ -224,7 +219,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                                     <>
                                       <div>Core Memories:</div>
                                       {part.functionResponse.response?.result?.core_memories.map(
-                                        (memory, index) => (
+                                        (memory: any, index: number) => (
                                           <CodeContainer
                                             key={index}
                                             content={memory}
