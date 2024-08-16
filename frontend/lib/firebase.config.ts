@@ -8,6 +8,7 @@ import { getStorage } from "firebase/storage";
 // Firebase configuration object with environment variables
 const firebaseConfig = {
 //...
+//
 };
 
 // Initialize Firebase
