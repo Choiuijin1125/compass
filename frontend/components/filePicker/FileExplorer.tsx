@@ -50,7 +50,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
   useEffect(() => {
     if (!userId) return;
     if (!threadId) return;
-    const current = pathName.split("/")[1]; // threads, questions
+    const current = pathName.split("/")[1]; // threads, etc....
 
     const db = getFirestore();
     const threadDocRef = doc(db, "users", userId, current, threadId);
@@ -95,7 +95,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
     if (!threadId) return;
     if (!rootFile) return;
 
-    const current = pathName.split("/")[1]; // threads, questions
+    const current = pathName.split("/")[1]; // threads, etc....
     const db = getFirestore();
     const threadDocRef = doc(db, "users", userId, current, threadId);
 
