@@ -16,26 +16,14 @@
 
 import React from "react";
 import MarkdownContainer from "@/components/markdown-container";
-import useAutoFocus from "@/app/hooks/use-auto-focus";
-import { MessageData } from "@/lib/message";
+import useAutoFocus from "@/hooks/use-auto-focus";
+import { FirestoreMessageData } from "@/types/message";
+import { Button } from "./ui/button";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import tidotStyles from "./tidot.module.css";
-import markdownStlyes from "./markdown.module.css";
-import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import "./common/scrollStyle.css";
-import CodeContainer from "./code-container";
-
-interface Status {
-  updateTime?: {
-    toDate: () => Date;
-  };
-}
+import "@/components/common/scroll-style.css"
 
 export interface ChatContainerProps {
-  messages: MessageData[];
+  messages: FirestoreMessageData[];
   onMessageSubmit: (userMsg: string) => Promise<void>;
   onMessageDelete: (messageId: string) => Promise<void>;
 }
@@ -46,10 +34,6 @@ export interface ChatContainerProps {
  * The `messages` are taking up central space.
  * Using markdown for rendering.
  *
- * On the botton there are up to 4 buttons showing suggested topics.
- * Buttons captions are sourced from a last `suggestedResponses` value.
- *
- * Then there is a text field with a send submit button for user input.
  *
  * After updating the messages list, the screen will auto-scroll to the bottom.
  *
@@ -98,6 +82,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     setUserMessage("");
   };
 
+
   // 새로운 대화 후 스크롤 위치
   const contentAreaRef = React.useRef<any>();
 
@@ -112,21 +97,19 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
 
   return (
     <div className="flex flex-col h-[96vh] w-full">
-      <main
+      <main 
         className={`
           flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100
           scroll_conatiner
         `}
         ref={contentAreaRef}
       >
-        {/* 대화 목록 */}
         {messages.map((message, i) => {
           const { prompt, response, createTime, status } = message;
-          // console.log("response",response)
           return (
-            <div key={i} className="flex items-end justify-center">
+            <div key={i} className="flex items-end">
               <div className="flex flex-col space-y-2 w-full pb-2">
-                <div className="  bg-gray-200 text-gray-800 rounded-bl-none">
+                <div className="flex group items-end mr-4 px-4 py-2 rounded-lg bg-gray-200 text-gray-800 rounded-bl-none">
                   <div className="flex-1">
                     {prompt}
                     {message.id && (
@@ -153,19 +136,13 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                 )}
 
                 {status?.state === "PROCESSING" && (
-                  <div className="  rounded-br-none text-gray-900 bg-gradient-to-r from-blue-100 to-purple-100 text-xs">
-                    <div className={tidotStyles.ticontainer}>
-                      <div className={tidotStyles.tiblock}>
-                        <div className={tidotStyles.tidot}></div>
-                        <div className={tidotStyles.tidot}></div>
-                        <div className={tidotStyles.tidot}></div>
-                      </div>
-                    </div>
+                  <div className="px-4 py-2 rounded-lg inline-block rounded-br-none text-gray-900 bg-gradient-to-r from-blue-100 to-purple-100 text-xs ml-4">
+                    Generating...
                   </div>
                 )}
 
                 {status?.error && (
-                  <div className=" bg-red-200 text-red-800 rounded-br-none">
+                  <div className="ml-4 px-4 py-2 rounded-lg inline-block bg-red-200 text-red-800 rounded-br-none">
                     {status.error}
                     {status?.updateTime && (
                       <div className="opacity-40 text-right text-xs mr-4 mt-2">
@@ -175,104 +152,56 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                   </div>
                 )}
 
-                {response &&
-                  Array.isArray(response) &&
-                  response.map((item, index: number) => (
-                    <div
-                      key={index}
-                      className="ml-4 px-4 py-2 rounded-lg bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-br-none"
-                    >
-                      {item.parts.map((part, partIndex) => (
-                        <div key={partIndex}>
-                          {part.text && (
-                            <div className="part-text ">
-                              <CodeContainer content={part.text} />
-                            </div>
-                          )}
-                          {part.functionCall && (
-                            <div className="part-function-call">
-                              <div className="bg-[#daf9f02c] text-white">
-                                <div>
-                                  Function Call: {part.functionCall.name}
-                                </div>
+                {
+                  response &&
+                    response.map((item, index: number) => (
+                      <React.Fragment key={index}>
+                        {item.parts[0].text && (
+                          <div className="ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-br-none">
+                            {item.parts[0].text}
+                          </div>
+                        )}
+                        {/* {item.parts[0].functionCall && (
+                          <div className="ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r text-xs text-white rounded-br-none">
+                            {item.parts[0].functionCall.name}
+                          </div>
+                        )} */}
+                        {item.parts[0].functionResponse && (
+                          <div className="ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r text-sm text-opacity-75 from-green-500 to-teal-400 text-white rounded-br-none">
+                            <strong>
+                              Function Call:{" "}
+                              {item.parts[0].functionResponse.name}{" "}
+                            </strong>
+                            {Object.entries(
+                              item.parts[0].functionResponse.response.result
+                            ).map(([key, value], idx) => (
+                              <div key={idx}>
+                                <strong>{key}:</strong> {value}
+                                <MarkdownContainer markdown={String(value)} />
                               </div>
-                            </div>
-                          )}
-                          {part.functionResponse && (
-                            <div className="part-function-response">
-                              <div className="flex bg-[#daf9f04e] text-white">
-                                <div>
-                                  Response:{" "}
-                                  {
-                                    part.functionResponse.response?.result
-                                      ?.resonaing
-                                  }
-                                  {/* <CodeContainer
-                                    content={
-                                      part.functionResponse.response?.result
-                                        ?.resonaing
-                                    }
-                                  /> */}
-                                  <CodeContainer
-                                    content={JSON.stringify(
-                                      part.functionResponse.response?.result
-                                        ?.optimized_query
-                                    )}
-                                  />
-                                  {part.functionResponse.name ===
-                                    "memory_reference" && (
-                                    <>
-                                      <div>Core Memories:</div>
-                                      {part.functionResponse.response?.result?.core_memories.map(
-                                        (memory, index) => (
-                                          <CodeContainer
-                                            key={index}
-                                            content={memory}
-                                          />
-                                        )
-                                      )}
-                                      <div>Recall Memories:</div>
+                            ))}
+                          </div>
+                        )}
+                      </React.Fragment>
+                    ))
 
-                                      {JSON.stringify(
-                                        part.functionResponse?.response?.result
-                                          ?.recall_memories
-                                      )}
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                      {status?.updateTime && (
-                        <div className="text-white text-right text-xs mr-4 mt-2">
-                          {status?.updateTime.toDate().toLocaleString()}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                  // <div className="ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-blue-500 to-purple-500 to-gray-400 text-white rounded-br-none">
+                  //   <MarkdownContainer markdown={response} />
+                  //   {status?.updateTime && (
+                  //     <div className="text-gray-300 text-right text-xs mr-4 mt-2">
+                  //       {status?.updateTime.toDate().toLocaleString()}
+                  //     </div>
+                  //   )}
+                  // </div>
+                }
               </div>
             </div>
           );
         })}
       </main>
+
       <footer className="flex items-center space-x-2 p-2 border-t border-gray-200 py-4 bg-gray-100">
         <form onSubmit={handleUserMessageSubmit} className="flex-1">
-          <div className="items-center">
-            {messages[messages.length - 1]?.followUpPrompts
-              ?.slice(0, 4)
-              .map((sugestion) => (
-                <button
-                  key={sugestion}
-                  type="button"
-                  className="flex-1 mr-2 mb-2 bg-blue-100 hover:bg-blue-200 text-gray-700 px-4 py-2 rounded-md text-left"
-                  onClick={() => onMessageSubmit(sugestion)}
-                >
-                  {sugestion}
-                </button>
-              ))}
-          </div>
           <div className="flex items-center mt-2">
             <Input
               name="user-message"
@@ -285,15 +214,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                 messages[messages.length - 1]?.status?.state === "PROCESSING"
               }
             />
-            <Button
-              type="submit"
-              disabled={
-                userMessage.trim() === "" ||
-                messages[messages.length - 1]?.status?.state === "PROCESSING"
-              }
-            >
-              Send
-            </Button>
+            <Button type="submit">Send</Button>
             <div ref={endOfChatRef}></div>
           </div>
         </form>
@@ -301,5 +222,4 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     </div>
   );
 };
-
 export default ChatContainer;

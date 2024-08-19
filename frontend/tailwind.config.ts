@@ -1,12 +1,17 @@
+import { createPreset } from 'fumadocs-ui/tailwind-plugin';
 import type { Config } from "tailwindcss";
 
 const config = {
   darkMode: ["class"],
-  content: [
+  presets: [createPreset()],
+  content: [    
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
     "./app/**/*.{ts,tsx}",
     "./src/**/*.{ts,tsx}",
+    './content/**/*.mdx',
+    './mdx-components.tsx',
+    './node_modules/fumadocs-ui/dist/**/*.js',
   ],
   prefix: "",
   theme: {
