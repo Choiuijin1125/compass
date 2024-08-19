@@ -1,34 +1,30 @@
+import FirebaseUserProvider from "@/lib/firebase-user";
+import "@/styles/globals.css";
+import { RootProvider } from 'fumadocs-ui/provider';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import "./globals.css";
-import FirebaseUserProvider from "../lib/firebase-user";
-import FrameLayout from "@/components/common/FrameLayout";
-
 const inter = Inter({ subsets: ["latin"] });
-
-interface RootLayoutProps {
-  children: React.ReactNode;
-}
 
 export const metadata: Metadata = {
   title: "Compass",
-  description: "Compass AI",
+  description: "Compass ai chat",
   icons: "/icon/compass_icon.png"
 };
 
-const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={inter.className}>        
         <FirebaseUserProvider>
-          {/* {children} */}
-          <FrameLayout>
-            {children}
-          </FrameLayout>
+          <RootProvider>
+          {children} 
+          </RootProvider>
         </FirebaseUserProvider>
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

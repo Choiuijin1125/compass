@@ -16,17 +16,19 @@
 
 "use client";
 
+import SignInContainer from "@/components/signin-container";
+import "@/lib/firebase.config";
 import {
+  GoogleAuthProvider,
   User,
+  UserCredential,
   getAuth,
   onAuthStateChanged,
   signInWithPopup,
-  GoogleAuthProvider,
-  UserCredential,
 } from "firebase/auth";
+import { usePathname } from 'next/navigation';
 import React, { useEffect, useState } from "react";
-import SignInContainer from "@/components/signin-container";
-import "@/lib/firebase.config";
+
 
 export interface FirebaseUser {
   isLoading?: boolean;
@@ -50,6 +52,9 @@ const FirebaseUserProvider: React.FC<FirebaseUserProviderProps> = ({
 }) => {
   const [user, setUser] = useState<FirebaseUser>({ isLoading: true });
   const auth = getAuth();
+  const pathname = usePathname()
+  const isDocsPath = pathname.startsWith("/docs");
+
 
   useEffect(() => {
     const signInWithGoogle = () =>
@@ -70,13 +75,18 @@ const FirebaseUserProvider: React.FC<FirebaseUserProviderProps> = ({
 
   return (
     <FirebaseUserContext.Provider value={user}>
-      {user?.isSignedIn === true && children}
-      {user?.isSignedIn === false && <SignInContainer />}
-      {/* {user?.isLoading && (
+      {isDocsPath ? (
+        children
+      ) : user?.isSignedIn === true ? (
+        children
+      ) : (
+        <SignInContainer />
+      )}
+      {user?.isLoading && (
         <div className="flex min-h-screen items-center justify-center text-gray-400">
           <div>Loading...</div>
         </div>
-      )} */}
+      )}
     </FirebaseUserContext.Provider>
   );
 };

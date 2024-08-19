@@ -1,0 +1,86 @@
+---
+title: Installation
+---
+
+## Requirements
+To get started, ensure you have the following tools installed on your system:
+
+- [Firebase CLI](https://firebase.google.com/docs/cli)
+- [Docker](https://www.docker.com/)
+
+## Firebase Project Setup
+
+1. **Create a Firebase Project**:
+   - Visit the [Firebase Console](https://console.firebase.google.com).
+   - Click on **Add Project** and follow the on-screen instructions to create a new project.
+   - After the project is created, go to the **Project Settings** to download the Firebase SDK configuration file (JSON file).
+
+## Firebase Settings
+
+### 1. Firebase Authentication
+Set up Firebase Authentication to allow users to sign in to the application. 
+Enable Google as a sign-in method in the Firebase console:
+- In the [Firebase console](https://console.firebase.google.com), open the **Auth** section.
+- On the **Sign in method** tab, enable the **Google** sign-in method and click **Save**.
+
+### 2. Firebase Storage
+Enable Firebase Storage to store and retrieve user-generated memories. Refer to the Firebase Storage setup guide [**here**](https://firebase.google.com/docs/storage).
+
+### 3. Firebase Cloud Firestore
+Set up Firebase Cloud Firestore to store and manage the app's data.
+- In the Firebase console, navigate to **Firestore Database**.
+- Choose **Start in Production mode** or **Test mode**, depending on your needs.
+
+#### Creating a Vector Index in Firestore
+To create a vector index in your Firestore database, use the following command:
+```bash
+gcloud alpha firestore indexes composite create ^
+--collection-group="vector" ^
+--query-scope="COLLECTION" ^
+--field-config="order=ASCENDING,field-path=file_id" ^
+--field-config="field-path=embedding_field,vector-config={\"dimension\":\"768\", \"flat\": \"{}\"}" ^
+--project=your-project-name
+--database=your-project-name
+```
+
+## Frontend Settings
+
+1. Replace the contents of `/frontend/lib/firebase.config.ts` with your Firebase web app configuration. You can find the necessary configuration details in the Firebase Console under Project Settings. For more information, follow the guide [here](https://firebase.google.com/docs/web/setup?hl=ko).
+
+## Backend Settings
+
+1. Navigate to the backend directory:
+
+    ```bash
+    cd backend
+    ```
+
+2. Copy the environment template file and rename it to `.env`:
+
+    ```bash
+    cp .env.template .env
+    ```
+
+3. Obtain your Firebase service account key and place the `serviceAccountKey.json` file in the `/backend/` directory. Replace the existing `/backend/.env` file with the relevant details. Follow the instructions [here](https://firebase.google.com/docs/admin/setup?hl=ko#python) to generate the service account key.
+
+4. Set the following environment variables in your `.env` file:
+
+    - `GENAI_API_KEY ` : [here](https://aistudio.google.com/app/apikey)
+    - `FIREBASE_STORAGE_DOMAIN`: The domain for Firebase Storage, available [here](https://firebase.google.com/docs/storage/web/start?hl=ko#web).
+
+## Docker Setup
+
+1. Build the Docker containers:
+
+    ```bash
+    docker compose build
+    ```
+
+2. Start the containers in detached mode:
+
+    ```bash
+    docker compose up -d
+    ```
+
+Your application should now be up and running!
+Open http://localhost:3000 with your browser to see the result.

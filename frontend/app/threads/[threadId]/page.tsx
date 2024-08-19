@@ -2,24 +2,13 @@
 
 import ChatContainer from "@/components/chat-container";
 import { FirebaseUserContext } from "@/lib/firebase-user";
+import { FirestoreMessageData } from "@/types/message";
 import {
-  FirestoreMessageData,
-  MessageData,
-  prepareMessage,
-} from "@/lib/message";
-import { preparePrompt } from "@/lib/prepare-prompt";
-import {
-  addDoc,
-  collection,
-  CollectionReference,
-  deleteDoc,
-  doc,
-  getFirestore,
-  onSnapshot,
-  orderBy,
-  query,
-  Timestamp,
-} from "firebase/firestore";
+  getMessagesCollection,
+  subscribeToMessages,
+  sendMessage as firebaseSendMessage,
+  deleteMessage as firebaseDeleteMessage,
+} from "@/lib/firebase/messages";
 import { useContext, useEffect, useMemo, useState } from "react";
 
 interface ThreadPageProps {
@@ -27,62 +16,37 @@ interface ThreadPageProps {
     threadId: string;
   };
 }
-
 const ThreadPage = ({ params }: ThreadPageProps) => {
   const { threadId } = params;
-  const [messages, setMessages] = useState<MessageData[]>([]);
+  const [messages, setMessages] = useState<FirestoreMessageData[]>([]);
   const user = useContext(FirebaseUserContext);
   const uid = user.currentUser?.uid;
 
-  const messagesCollection = useMemo(
-    () =>
-      collection(
-        getFirestore(),
-        `users/${uid}/threads/${threadId}/messages`
-      ) as CollectionReference<FirestoreMessageData>,
-    [uid, threadId]
-  );
-
-  useEffect(() => {
-    if (!uid) return;
-
-    const unsubscribe = onSnapshot(
-      query(messagesCollection, orderBy("createTime", "asc")),
-      (snapshot) => {
-        const messages = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...prepareMessage(doc.data()),
-        }));
-        // console.log(
-        //   "Message doc changes: ",
-        //   snapshot
-        //     .docChanges()
-        //     .map((ch) => ({ type: ch.type, id: ch.doc.id, doc: ch.doc.data() }))
-        // );
-        setMessages(messages);
-      }
-    );
-    return unsubscribe;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  const messagesCollection = useMemo(() => {
+    if (!uid) return null;
+    return getMessagesCollection(uid, threadId);
   }, [uid, threadId]);
 
+  useEffect(() => {
+    if (!uid || !messagesCollection) return;
+
+    const unsubscribe = subscribeToMessages(messagesCollection, setMessages);
+    return unsubscribe;
+  }, [uid, threadId, messagesCollection]);
+
   const sendMessage = async (userMsg: string) => {
-    if (!uid) return;
+    if (!uid || !messagesCollection) return;
 
     setMessages((prev) => [...prev, { prompt: userMsg }]);
-    const newMessageRef = await addDoc(messagesCollection, {
-      prompt: userMsg,
-      createTime: Timestamp.now(),
-    });
-    // console.log("New message added with ID: ", newMessageRef.id);
+    await firebaseSendMessage(messagesCollection, userMsg);
   };
 
   const deleteMessage = async (messageId: string) => {
-    if (!uid) return;
+    if (!uid || !messagesCollection) return;
 
-    await deleteDoc(doc(messagesCollection, messageId));
+    await firebaseDeleteMessage(messagesCollection, messageId);
   };
-
+  console.log(messages, "Message Object");
   return (
     <>
       <ChatContainer
