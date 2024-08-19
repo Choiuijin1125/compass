@@ -8,7 +8,7 @@ ENV PYTHONPATH=/app
 WORKDIR /app
 
 # 필요한 파일 복사
-COPY ./ /app
+COPY ./backend /app
 
 # 종속성 설치
 RUN pip install --no-cache-dir -r requirements.txt
