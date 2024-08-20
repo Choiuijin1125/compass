@@ -55,8 +55,12 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
     }
 
     if (item.children) {
+
       item.children.forEach((child: FileData) => {
-        collectAllItemIds(child, itemArray);
+        if(child.state === "COMPLETED") {
+          collectAllItemIds(child, itemArray);
+        }
+        
       });
     }
 
@@ -120,6 +124,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
           onCheckedChange={(e: any) =>
             handleCheck(e, rowData, checkItems, setCheckItems)
           }
+          disabled={rowData?.state !== "COMPLETED"}
         />
         <label
           className="flex items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 min-w-fit"
