@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import React from "react";
+import "@/components/common/scroll-style.css";
 import MarkdownContainer from "@/components/markdown-container";
+import { Input } from "@/components/ui/input";
 import useAutoFocus from "@/hooks/use-auto-focus";
 import { FirestoreMessageData } from "@/types/message";
+import React from "react";
 import { Button } from "./ui/button";
-import { Input } from "@/components/ui/input";
-import "@/components/common/scroll-style.css"
 
 export interface ChatContainerProps {
   messages: FirestoreMessageData[];
@@ -173,14 +173,16 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
                               Function Call:{" "}
                               {item.parts[0].functionResponse.name}{" "}
                             </strong>
-                            {Object.entries(
-                              item.parts[0].functionResponse.response.result
-                            ).map(([key, value], idx) => (
-                              <div key={idx}>
-                                <strong>{key}:</strong> {value}
-                                <MarkdownContainer markdown={String(value)} />
-                              </div>
-                            ))}
+                            {item.parts[0].functionResponse.response &&
+                              item.parts[0].functionResponse.response.result &&
+                              Object.entries(item.parts[0].functionResponse.response.result).map(
+                                ([key, value], idx) => (
+                                  <div key={idx}>
+                                    <strong>{key}:</strong> {value}
+                                    <MarkdownContainer markdown={String(value)} />
+                                  </div>
+                                )
+                              )}
                           </div>
                         )}
                       </React.Fragment>
