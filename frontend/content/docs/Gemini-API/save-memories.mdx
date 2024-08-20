@@ -1,0 +1,117 @@
+---
+title: Save Memories
+---
+
+In modern interactions with AI, it's crucial to keep track of conversations that hold valuable insights, ideas, and memories. The "Save Memories" feature is designed to do just that by summarizing and storing your conversations with an AI assistant using predefined templates. This feature leverages the Gemini API to automate the process of summarizing and saving conversations for future reference.
+
+## Overview
+
+The Save Memories process involves the following key steps:
+
+1. **Template Selection**: The system retrieves the user's chosen template from Firebase storage. This template dictates the format in which the conversation summary will be structured.
+
+2. **Summarization**: The AI, using a predefined instruction set, summarizes the conversation according to the selected template. This step ensures that the conversation is condensed into a format that is easy to read and reference later.
+
+3. **Saving**: The summarized conversation is then saved into the user's memory storage (Firebase) for future access.
+
+## Steps in Detail
+
+### 1. Get Template
+
+The first step in the process is to select the appropriate template from Firebase storage. These templates can vary depending on the user's needs, such as:
+
+- **Study**: For academic or educational discussions.
+- **Reflection**: For personal growth and introspection.
+- **Self-Development**: For conversations focused on improving skills or habits.
+
+The selected template will dictate the structure of the summarized conversation.
+
+```python
+conversation_saver_instruction = """
+Summarize and store dialogue content between the user and the assistant using the user's predefined template. 
+"""
+
+conversation_saver = genai.protos.FunctionDeclaration(
+    name="conversation_saver",
+    description=conversation_saver_instruction,
+    parameters=genai.protos.Schema(
+        type=genai.protos.Type.OBJECT,
+        properties={
+            'summarized_text': summarized_text_schema,
+            'save_path': genai.protos.Schema(type=genai.protos.Type.STRING)
+        },
+        required=['summarized_text', 'save_path']
+    )
+)
+```
+
+### 2. Summarize the Conversation
+Once the template is selected, the AI will summarize the conversation. The summarization process is guided by specific instructions that align with the chosen template.
+
+Example Instructions for Summarization:
+- **Conversation Topic**: Identifies the main subject or question discussed during the conversation.
+- **Key Points**: Highlights the essential points covered.
+- **Examples**: Provides examples or scenarios mentioned.
+- **Summary**: Condenses the entire conversation into a brief overview.
+- **Additional Notes**: Includes any extra insights or reflections.
+- **Resources**: Lists any references or resources mentioned.
+
+These elements ensure that the summarized conversation is not only concise but also comprehensive and aligned with the user's needs.
+
+```python
+def get_instruction(template, history):
+    summarize_dialogue_instruction = f"""
+    Summarize dialogue content between the user and the assistant using the user's predefined template. 
+
+    Example
+    1. **Conversation Topic:** The user may provide the main topic or question discussed.
+    2. **Key Points:** The user might specify the key points discussed during the conversation.
+    3. **Examples:** The user might provide examples related to the key points.
+    4. **Summary:** The user might provide a summary of the entire conversation.
+    5. **Additional Notes:** The user might include any additional notes or insights.
+    6. **Resources:** The user might include any resources or references mentioned during the conversation.
+
+    predefined template:
+    if there is no information in template, you can edit template
+    <UserTemplate>
+    {template}
+    </UserTemplate>
+
+    Conversation History: {history}
+"""
+    return summarize_dialogue_instruction
+
+def summarize_conversation(template, history):
+    history = [json.loads(MessageToJson(x._pb)) for x in history]    
+    template = read_text_from_bytesio(template)
+    prompt = get_instruction(template, history)
+    model = genai.GenerativeModel("gemini-1.5-pro")
+    response = model.generate_content([prompt], request_options={"timeout": 6000})
+    return response.text
+
+```
+
+### 3. Save the Conversation
+The final step is saving the summarized conversation into the user's memory storage in Firebase. This allows the user to retrieve and review the summary whenever needed, providing a seamless way to keep track of important discussions.
+
+```python
+def save_conversation(summary: str, user_id, save_path, save_file_name):
+    file_content = summary
+
+    # process the file content in memory
+    file_buffer = io.BytesIO()
+    file_buffer.write(file_content.encode('utf-8'))
+    file_buffer.seek(0)
+    
+    # upload to Firebase Storage
+    bucket = storage.bucket(os.environ["FIREBASE_STORGE_DOMAIN"])
+    blob = bucket.blob(f"{user_id}/{save_path}/{save_file_name}.txt")
+    blob.upload_from_file(file_buffer, content_type='text/plain')
+```
+
+### Benefits of Save Memories
+- **Personalized Summaries**: By using templates, the AI tailors the summaries to your specific needs, whether for study, reflection, or self-improvement.
+- **Easy Access**: Storing the summarized conversations in Firebase ensures they are easily retrievable and organized.
+- **Time-Saving**: Automated summarization and storage reduce the need for manual note-taking, freeing up time for other activities.
+
+This feature is an excellent tool for anyone looking to maintain a well-organized record of their interactions with AI, making it easier to reflect, learn, and grow from past conversations.

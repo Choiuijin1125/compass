@@ -1,0 +1,121 @@
+---
+title: Embedding Using Gemini
+---
+
+## Introduction
+
+Compass leverages the Gemini API to extract and embed memories from various types of content—such as images, videos, audio, and text—into vector representations. These vectors are crucial for efficient retrieval and memory reference in applications like personalized search and content recommendations. Once embedded, the vectors are stored in a Firestore database, ensuring quick and easy access for future queries.
+
+## Image Embedding
+
+### Step 1: Capturing the Image Content
+
+The process of image embedding begins with generating a detailed description that captures the main objects, background elements, colors, and any noticeable activities or interactions within the image. This description, or caption, is created using the Gemini model and serves as the foundation for producing meaningful vector embeddings.
+
+### Step 2: Generating the Image Embedding
+
+Once the detailed description is generated, it is converted into a vector using Gemini's embedding model. This vector encapsulates the essence of the image, enabling its efficient storage and retrieval in a vector database.
+
+```python
+def get_image_caption(image):
+    prompt = """Generate a detailed description of this image for recall memory purposes. Include details about the main objects, background elements, colors, and any noticeable activities or interactions."""
+    caption_model = genai.GenerativeModel("gemini-1.5-flash")
+    caption = caption_model.generate_content([prompt, image], stream=True)
+    caption.resolve()
+    return caption.text
+```
+
+### Use Case
+
+By embedding images with descriptive captions, you can perform advanced searches within large photo collections. For instance, searching for "sunset over a mountain" or "group of people at a party" becomes possible even if the photos are not explicitly tagged with these descriptions.
+
+## Audio Embedding
+
+### Step 1: Transcribing the Audio
+
+Audio files are transcribed to convert spoken language into text, capturing the core content of the audio.
+
+### Step 2: Generating the Audio Embedding
+
+The transcribed text is then embedded into a vector, creating a searchable representation of the audio content.
+
+```python
+def transcribe_audio(byte_content, file_type):
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
+        temp_file.write(byte_content)
+        temp_file_path = temp_file.name
+
+    audio_file = genai.upload_file(temp_file_path, mime_type=file_type)
+
+    prompt = """Generate a transcript of the speech."""
+    stt_model = genai.GenerativeModel("gemini-1.5-flash")
+    script = stt_model.generate_content([prompt, audio_file], safety_settings=SAFETY)
+
+    for file in genai.list_files():
+        genai.delete_file(file)
+        
+    return script.text
+
+```
+
+## Use Case: Enhancing Subtitle Systems with Recall Memories
+Embedding transcriptions of audio content provides a powerful tool for enhancing subtitle systems, especially in multimedia applications like video streaming platforms or educational content libraries.
+
+### Scenario
+Imagine you're managing a video streaming platform where users frequently watch educational videos, documentaries, or lectures. To improve the accessibility and user experience, the platform offers subtitles for all videos. However, users often need more than just a one-time view of subtitles—they might want to revisit specific parts of the content or search for particular topics discussed across different videos.
+
+### Solution with Audio Embedding and Recall Memories
+By embedding the transcriptions of audio content into vectors, the system can create a robust recall memory mechanism. Here’s how it works:
+
+1. Transcription Embedding: Each video is transcribed, and the text is converted into vectors. These vectors capture the semantic essence of the spoken content, not just the words but also the context and meaning.
+
+2. Recall Memories Integration: These embedded vectors are stored as recall memories within the system. When a user searches for specific information—such as "quantum mechanics" in a series of physics lectures—the system can quickly retrieve the relevant segments across all videos where this topic is discussed.
+
+3. Subtitle Enhancement: When users view a video, they can interact with the subtitles more intelligently. For instance, they can search for a specific term within the subtitles, and the system will recall all instances where that term or related concepts appear. The recall memories allow the system to provide context-aware suggestions, making it easier for users to jump to the exact moment in a video where their query is addressed.
+
+4. Cross-Video Search: Beyond just individual videos, users can perform cross-video searches. If a user wants to find all instances of "artificial intelligence" across a course or series of documentaries, the system can utilize the recall memories from each video’s embedded transcription to provide a comprehensive list of relevant segments, complete with timestamps and context.
+
+5. Interactive Learning: For educational content, this system enables an interactive learning experience. Users can highlight a particular subtitle, prompting the system to recall additional resources or similar discussions from other videos in the library. This creates a more enriched learning environment, where users are not limited to just the current video but can explore related content seamlessly.
+
+## Text Embedding
+
+### Step 1: Extracting Text Content
+
+For text files, the content is extracted directly, such as from a PDF document. This extracted text forms the basis for the embedding process.
+
+### Step 2: Creating the Text Embedding
+
+The extracted text is broken down into manageable chunks, if necessary, and each chunk is embedded into a vector. These vectors capture the semantic meaning of the text, making it searchable and easy to retrieve.
+
+### Use Case
+
+Embedding text content in a document management system allows for advanced keyword searches across vast document collections, significantly improving information retrieval efficiency.
+
+## Storing Embeddings in Firestore
+
+### Uploading Vectors to Firestore
+
+After embedding the content—whether it's an image, video, audio, or text—the resulting vectors are stored in a Firestore database. Firestore provides a scalable, real-time storage solution that allows for efficient retrieval of these embeddings. Each vector is stored with associated metadata, such as the original file name, file type, and relevant context.
+
+```python
+def upload_vector(vectors: list, user_id: str, file_id: str, file_name: str, file_type: str, memory_collection, db):
+    logging.info("Upload vector process started")
+    for vector in vectors:
+        obj = VectorUploadSchema(vector=vector[1],
+                                 content=vector[0],
+                                 user_id=user_id,
+                                 file_id=file_id)
+        doc_uuid = str(uuid.uuid4())
+
+        user_doc_ref = db.collection("users").document(user_id)
+        vector_collection_ref = user_doc_ref.collection("vector")
+        vector_result = obj.model_dump()
+        vector_result["file_name"] = file_name
+        vector_result["file_type"] = file_type
+        vector_result["memory_collection"] = memory_collection
+        vector_result["embedding_field"] = Vector(vector_result["vector"]["embedding"])
+        vector_result.pop("vector")
+        vector_collection_ref.document(doc_uuid).set(vector_result)
+    logging.info("upload vector process finished")
+
+```

@@ -1,0 +1,115 @@
+---
+title: Basic Concept
+---
+
+## Query Optimization
+
+Query Optimization is a crucial feature within the Compass system, designed to extract and emphasize important keywords from user queries. This process significantly enhances the efficiency of searches within the vector store, ensuring that the most relevant information is retrieved quickly.
+
+### Original Query Example
+
+<div class="flex w-full group items-end mr-4 px-4 py-2 rounded-lg bg-gray-200 text-gray-800 rounded-bl-none">
+Let's start studying relative pronouns. I was struggling to understand "whom" and "whose" yesterday.
+</div>
+
+### Optimized Query
+
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-green-500 to-teal-400 text-white rounded-br-none">
+Function Call: query_optimizer
+optimized_query:
+Output: relative pronouns, whom, whose, grammar, August 11, 2024
+</div>
+
+## Memory Reference and Retrieval
+
+Memory Reference in Compass leverages the optimized query to search the vector store. The system utilizes a Firestore database for the vector storage and retrieval processes. Once the relevant data is retrieved, the Gemini API is used to summarize and recall memories related to the user’s query.
+
+### Core Memories
+
+Core Memories are the foundational elements of the Compass system. These memories must be referenced in every interaction, ensuring that the AI remains consistent and contextually accurate across all conversations. Core Memories include:
+
+**System Prompt**: A predefined instruction set that guides the AI's behavior, ensuring it responds in a manner consistent with the intended use case (e.g., maintaining an educational and disciplined attitude).
+
+**User Profile**: Comprehensive details about the user, such as their name, age, occupation, interests, skills, goals, and personality traits. This information is essential for personalizing interactions and making responses more relevant.
+
+**Procedures**: Specific workflows or rules the system follows during interactions. These are critical for maintaining the integrity and consistency of the AI's responses.
+
+**Critical Context**: Any additional, essential information that the system needs to reference, such as past interactions, preferences, or ongoing tasks that the user is engaged with.
+
+### Recall Memories
+
+Recall Memories are dynamically accessed based on the context of the current conversation or specific user queries. Unlike Core Memories, which are referenced in every interaction, Recall Memories are retrieved when they are particularly relevant to the discussion. This helps the system maintain a coherent conversation and ensures that previous knowledge is appropriately integrated into the current context.
+
+**Example of Summarized Recall Memories:**
+
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-green-500 to-teal-400 text-white rounded-br-none">
+Function Call: memory_reference
+
+Concept: Relative pronouns are used to connect sentences by providing additional information about a noun or pronoun. They help make sentences longer and more complex while reducing unnecessary repetition.
+
+Details:
+  Who: Used for people as the subject of the clause.
+  Whom: Used for people as the object of the clause. Often replaced by "who" in modern English.
+  Whose: Indicates possession.
+  Which: Used for animals and objects.
+  That: Can replace "who," "whom," or "which" for people, animals, and objects.
+
+Emotional Context:
+  Learning about relative pronouns can be satisfying, especially when understanding how they contribute to complex sentences.
+  The examples provided aim to make learning engaging and enjoyable, fostering a sense of accomplishment.
+
+Personal Values:
+  This knowledge enhances communication skills and understanding of grammar, leading to more effective and sophisticated writing.
+  The clear explanations and practical examples reflect a preference for accessible and engaging learning materials.
+</div>
+> **Note**: This summary reflects information stored in the provided memory. It does not include context about ongoing projects or preferences, as this information is stored separately.
+
+## Reasoning
+
+The Reasoning section demonstrates the AI's thought process when addressing the user’s query. In this case, the AI recognizes the user’s difficulty with "whom" and "whose," common points of confusion in English grammar. To address this, the AI decides to provide clear explanations, relevant examples, and a short exercise to reinforce the concepts. This approach aligns with the user’s profile, which indicates a preference for challenges, making the learning process both effective and engaging.
+
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-green-500 to-teal-400 text-white rounded-br-none">
+
+Function Call: Reasoning<br></br>
+Thought: Jin is struggling with "whom" and "whose." These are tricky, even for native English speakers. Since he's having trouble, I need to be extra clear and thorough. 
+I'll explain each one, give examples, and then provide a short exercise to test his understanding. 
+Considering Jin's love for challenges, adding a small assignment will resonate well with his personality.
+
+</div>
+
+## Final Answer
+
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-br-none">
+Jin, I understand you are having some difficulty with "whom" and "whose." Many people find these relative pronouns confusing, but don't worry—we'll conquer them together!
+
+Let's start with "whom." "Whom" is used as the object of a verb or preposition. Think of it as the "receiving" end of an action. For example, "To whom did you give the book?" In this case, the book is being given to someone, making "whom" the object of the preposition "to." It's important to remember that while "whom" is grammatically correct, in modern English, "who" often replaces it in casual conversation.
+
+Now, let's move on to "whose." "Whose" indicates possession. It's used to ask (or tell) to whom something belongs. For instance, "Whose book is this?" In this sentence, we are inquiring about the owner of the book.
+
+To make this clearer, let's look at some more examples:
+
+Whom:
+The programmer whom I met at the conference was very knowledgeable. (Object of the verb "met")
+She is the designer with whom I collaborated on the project. (Object of the preposition "with")
+
+Whose:
+The car, whose engine was sputtering, finally came to a stop. (Possession—the engine belongs to the car)
+The student whose project won first place was overjoyed. (Possession—the project belongs to the student)
+
+Now, to solidify your understanding, try this short exercise:
+
+Fill in the blanks with the correct relative pronoun ("whom" or "whose"):
+1. The musician, ______ latest album topped the charts, is going on tour.
+2. To ______ should I address this letter?
+3. The team ______ project was selected will present their findings tomorrow.
+
+Take your time, and we can review your answers together. Remember, practice makes perfect!
+</div>
+
+## All in One
+
+<div class="w-full">
+<video controls preload="none">
+  <source src="/content/chat.mp4" type="video/mp4" />
+</video>
+</div>
