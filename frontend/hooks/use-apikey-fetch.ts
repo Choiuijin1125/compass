@@ -11,7 +11,7 @@ function base64Decode(encodedData: string) {
   return Buffer.from(encodedData, 'base64').toString();
 }
 
-export const useSetApikey = async (
+export const settingApikey = async (
   userId: string,
   apikey: string
 ) => {

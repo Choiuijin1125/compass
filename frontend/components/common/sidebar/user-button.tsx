@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useSetApikey, useGetApikey } from "@/hooks/use-apikey-fetch";
+import { settingApikey, useGetApikey } from "@/hooks/use-apikey-fetch";
 
 function UserButton() {
   const user = useContext(FirebaseUserContext);
@@ -32,7 +32,7 @@ function UserButton() {
   const [apikeyValue, setApikeyValue] = useState("");
 
   const addApikey = (apikeyValue: string) => {
-    useSetApikey(user?.currentUser?.uid ?? "", apikeyValue)
+    settingApikey(user?.currentUser?.uid ?? "", apikeyValue)
     setApikeyValue("")
     setIsKeyInputOpen(false)
   };
