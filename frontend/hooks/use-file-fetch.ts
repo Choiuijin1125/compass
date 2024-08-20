@@ -66,6 +66,7 @@ export const useFetchTreeData = (
         file_type: node.file_type,
         path: node.path,
         children: Object.values(node.children || {}).map(formatTree),
+        state: node.state
       });
 
       const formattedTree = formatTree(root[rootFile as string]);

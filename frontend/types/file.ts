@@ -4,6 +4,7 @@ export interface FileData {
   file_type: "FOLDER" | "FILE";
   path: string;
   children: FileData[];
+  state: "COMPLETED" | "PROCESSING" | "ERROR"
 }
 
 export type FileType = "FOLDER" | "FILE"
