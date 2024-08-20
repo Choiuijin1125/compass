@@ -17,6 +17,7 @@
 "use client";
 
 import SignInContainer from "@/components/signin-container";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import "@/lib/firebase.config";
 import {
   GoogleAuthProvider,
@@ -75,19 +76,14 @@ const FirebaseUserProvider: React.FC<FirebaseUserProviderProps> = ({
 
   return (
     <FirebaseUserContext.Provider value={user}>
-      {(user?.isSignedIn === true || isDocsPath) && children}
-      {user?.isSignedIn === false && <SignInContainer />}
-      {/* {isDocsPath ? (
-        children
-      ) : user?.isSignedIn === true ? (
+      {user.isLoading ? (
+        <div className="flex items-center justify-center min-h-screen">
+          <LoadingSpinner/>
+        </div>
+      ) : isDocsPath || user.isSignedIn ? (
         children
       ) : (
         <SignInContainer />
-      )} */}
-      {user?.isLoading && (
-        <div className="flex min-h-screen items-center justify-center text-gray-400">
-          <div>Loading...</div>
-        </div>
       )}
     </FirebaseUserContext.Provider>
   );
