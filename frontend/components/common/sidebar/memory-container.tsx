@@ -59,6 +59,7 @@ const MemoryContainer: React.FC<{}> = ({}) => {
         {isSaveConversationsOpen && 
         <SaveConversationsModal 
           userId={user.currentUser?.uid} 
+          isOpen={isSaveConversationsOpen}
           setIsOpen={setIsSaveConversationsOpen} 
           threadId={params?.threadId as string}
         />
