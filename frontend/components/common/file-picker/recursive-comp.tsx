@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDropzone } from "react-dropzone";
 import { RecursiveCompProps, FileData } from "@/types/file";
@@ -41,6 +41,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
   onDrop,
   userId, // userId prop 추가
   rootFile, // rootFile prop 추가
+  updateCheckItems,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
   const [newFolderName, setNewFolderName] = useState(""); // 폴더 이름 상태
@@ -102,6 +103,12 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
 
     setNewFolderName(""); // 폴더 이름 입력창 초기화
   };
+
+  useEffect(() => {
+    if(updateCheckItems) updateCheckItems()
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkItems])
 
   return (
     <div style={{ paddingLeft }} className="my-2">
@@ -187,6 +194,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
             onDrop={onDrop}
             userId={userId} // userId prop 전달
             rootFile={rootFile} // rootFile prop 전달
+            updateCheckItems={updateCheckItems}
           />
         ))}
     </div>

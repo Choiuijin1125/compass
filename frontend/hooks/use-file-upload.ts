@@ -1,6 +1,6 @@
+import { useEffect, useRef } from "react";
+import { doc, getFirestore, updateDoc, onSnapshot } from "firebase/firestore";
 import { RootFile } from "@/types/file";
-import { doc, getFirestore, onSnapshot, updateDoc } from "firebase/firestore";
-import { useEffect } from "react";
 
 export const useFirestoreUpdates = (
   userId: string | undefined,
@@ -39,24 +39,48 @@ export const useFirestoreUpdates = (
     });
 
     return () => unsubscribe();
-  }, [userId, threadId, rootFile, pathName, setCheckItems]);
 
-  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, threadId, rootFile]);
+
+
+  // useEffect(() => {
+  //   if (!userId || !threadId || !rootFile) return;
+  //   const current = pathName.split("/")[1];
+  //   const db = getFirestore();
+  //   const threadDocRef = doc(db, "users", userId, "threads", threadId);
+
+  //   const updateCheckItems = async () => {
+  //     try {
+  //       await updateDoc(threadDocRef, {
+  //         [rootFile]: checkItems.length > 0 ? checkItems : [],
+  //       });
+  //     } catch (error) {
+  //       console.error("Error updating document:", error);
+  //     }
+  //   };
+
+  //   updateCheckItems();
+
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [checkItems]);
+
+  
+
+  const updateCheckItems = async () => {
     if (!userId || !threadId || !rootFile) return;
-
-    const current = pathName.split("/")[1];
     const db = getFirestore();
     const threadDocRef = doc(db, "users", userId, "threads", threadId);
+    try {
+      await updateDoc(threadDocRef, {
+        [rootFile]: checkItems.length > 0 ? checkItems : [],
+      });
+    } catch (error) {
+      console.error("Error updating document:", error);
+    }
+  };
 
-    const updateCheckItems = async () => {
-      try {
-        await updateDoc(threadDocRef, {
-          [rootFile]: checkItems.length > 0 ? checkItems : [],
-        });
-      } catch (error) {
-        console.error("Error updating document:", error);
-      }
-    };
-
-    updateCheckItems();
-  }, [checkItems]);};
+  return {
+    updateCheckItems
+  }
+};

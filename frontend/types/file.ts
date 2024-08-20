@@ -25,6 +25,7 @@ export interface RecursiveCompProps {
   onDrop: (acceptedFiles: File[], currentPath: string) => void;
   userId: string;
   rootFile: RootFile;
+  updateCheckItems?: () => void;
 }
 
 
