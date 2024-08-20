@@ -75,13 +75,15 @@ const FirebaseUserProvider: React.FC<FirebaseUserProviderProps> = ({
 
   return (
     <FirebaseUserContext.Provider value={user}>
-      {isDocsPath ? (
+      {(user?.isSignedIn === true || isDocsPath) && children}
+      {user?.isSignedIn === false && <SignInContainer />}
+      {/* {isDocsPath ? (
         children
       ) : user?.isSignedIn === true ? (
         children
       ) : (
         <SignInContainer />
-      )}
+      )} */}
       {user?.isLoading && (
         <div className="flex min-h-screen items-center justify-center text-gray-400">
           <div>Loading...</div>

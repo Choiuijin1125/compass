@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useDropzone } from "react-dropzone";
 import { RecursiveCompProps, FileData } from "@/types/file";
@@ -41,8 +41,10 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
   onDrop,
   userId, // userId prop 추가
   rootFile, // rootFile prop 추가
+  updateCheckItems,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [isAddFolderOpen, setIsAddFolderOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState(""); // 폴더 이름 상태
   console.log(newFolderName, "newFolderName");
   const collectAllItemIds = (
@@ -54,8 +56,12 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
     }
 
     if (item.children) {
+
       item.children.forEach((child: FileData) => {
-        collectAllItemIds(child, itemArray);
+        if(child.state === "COMPLETED") {
+          collectAllItemIds(child, itemArray);
+        }
+        
       });
     }
 
@@ -88,6 +94,8 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
 
   const createFolder = async () => {
     if (!newFolderName.trim()) return;
+    const pathSegments = rowData.path.split("/");
+    const parentPath = pathSegments[pathSegments.length - 1];
 
     const newFolderId = uuidv4(); // 고유 ID 생성
     await addFolder(
@@ -95,13 +103,20 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
       newFolderId,
       "FOLDER",
       rowData.path,
-      rowData.path.split("/")[2], // parent_path는 현재 폴더의 경로를 사용
+      parentPath, // parent_path는 현재 폴더의 경로를 사용
       userId,
       rootFile
     );
+    setIsAddFolderOpen(false)
 
     setNewFolderName(""); // 폴더 이름 입력창 초기화
   };
+
+  useEffect(() => {
+    if(updateCheckItems) updateCheckItems()
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkItems])
 
   return (
     <div style={{ paddingLeft }} className="my-2">
@@ -111,6 +126,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
           onCheckedChange={(e: any) =>
             handleCheck(e, rowData, checkItems, setCheckItems)
           }
+          disabled={rowData?.state !== "COMPLETED"}
         />
         <label
           className="flex items-center text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 min-w-fit"
@@ -144,7 +160,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
 
         {rowData.file_type === "FOLDER" && (
           <div className="flex items-center">
-            <Dialog>
+            <Dialog open={isAddFolderOpen} onOpenChange={setIsAddFolderOpen}>
               <DialogTrigger>
                 <FolderPlus />
               </DialogTrigger>
@@ -152,8 +168,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
                 <DialogHeader>
                   <DialogTitle>Create new folder</DialogTitle>
                   <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
+                    
                   </DialogDescription>
                   <div className="flex w-full max-w-sm items-center space-x-2">
                     <Input
@@ -162,7 +177,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
                       value={newFolderName}
                       onChange={(e) => setNewFolderName(e.target.value)}
                     />
-                    <Button onClick={createFolder}>Create</Button>
+                    <Button disabled={newFolderName.trim() === ""} onClick={createFolder}>Create</Button>
                   </div>
                 </DialogHeader>
               </DialogContent>
@@ -187,6 +202,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
             onDrop={onDrop}
             userId={userId} // userId prop 전달
             rootFile={rootFile} // rootFile prop 전달
+            updateCheckItems={updateCheckItems}
           />
         ))}
     </div>

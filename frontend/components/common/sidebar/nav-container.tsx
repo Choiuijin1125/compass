@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import UserButton from "../sidebar/user-button";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "../theme-toggle";
 
 const NavContainer = () => {
   const router = useRouter();
@@ -18,22 +19,24 @@ const NavContainer = () => {
         </p>
         <p className="title font-bold text-xl mb-3">Threads</p>
         <Button
-          className="flex items-center justify-start gap-2 w-full"
+          className="flex items-center justify-start gap-2 w-[216px]"
           onClick={() => router.push("/")}
-          // variant={"outline"}
         >
           <Image src="/icon/play_white.svg" alt="" width={18} height={18} />
-          Create chat
+          Create Chat
         </Button>
         <div className="fake h-5"></div>
         <ThreadsList/>
       </div>
       <div className="side-bottom pl-6 mb-10">
-          <p className="title font-bold text-xl mb-3">Settings</p>
-          <div className="cursor-pointer w-fit flex items-center gap-2 mt-4 relative">
-            <UserButton />
-          </div>
+        <p className="title font-bold text-xl mb-3">Settings</p>
+        <div className="cursor-pointer w-fit flex items-center gap-2 mt-4 relative">
+          <UserButton />
         </div>
+        <div className="mt-4">
+          <ThemeToggle/>
+        </div>
+      </div>
     </div>
   )
 }

@@ -4,6 +4,7 @@ export interface FileData {
   file_type: "FOLDER" | "FILE";
   path: string;
   children: FileData[];
+  state: "COMPLETED" | "PROCESSING" | "ERROR"
 }
 
 export type FileType = "FOLDER" | "FILE"
@@ -25,6 +26,7 @@ export interface RecursiveCompProps {
   onDrop: (acceptedFiles: File[], currentPath: string) => void;
   userId: string;
   rootFile: RootFile;
+  updateCheckItems?: () => void;
 }
 
 

@@ -15,7 +15,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
   const [newFolderName, setNewFolderName] = useState(""); // 폴더 이름 상태
 
   const { tree, expanded } = useFetchTreeData(userId, rootFile);
-  useFirestoreUpdates(
+  const {updateCheckItems} = useFirestoreUpdates(
     userId,
     threadId,
     rootFile,
@@ -64,6 +64,7 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
           checkItems={checkItems}
           setCheckItems={setCheckItems}
           onDrop={onDrop}
+          updateCheckItems={updateCheckItems}
         />
       ) : (
         <p>Loading...</p>
