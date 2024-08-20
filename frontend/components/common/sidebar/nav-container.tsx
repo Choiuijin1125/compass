@@ -33,7 +33,7 @@ const NavContainer = () => {
         <div className="cursor-pointer w-fit flex items-center gap-2 mt-4 relative">
           <UserButton />
         </div>
-        <div>
+        <div className="mt-4">
           <ThemeToggle/>
         </div>
       </div>
