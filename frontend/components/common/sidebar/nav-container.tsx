@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import UserButton from "../sidebar/user-button";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "../theme-toggle";
 
 const NavContainer = () => {
   const router = useRouter();
@@ -31,6 +32,9 @@ const NavContainer = () => {
         <p className="title font-bold text-xl mb-3">Settings</p>
         <div className="cursor-pointer w-fit flex items-center gap-2 mt-4 relative">
           <UserButton />
+        </div>
+        <div>
+          <ThemeToggle/>
         </div>
       </div>
     </div>
