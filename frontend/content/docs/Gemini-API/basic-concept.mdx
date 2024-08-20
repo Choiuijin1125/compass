@@ -1,0 +1,121 @@
+---
+title: Basic Concept
+description: Welcome to the 🧭Compass documentation!
+---
+
+## Query Optimization
+
+Query Optimization extracts and emphasizes important keywords from user queries to enhance vector store searches.
+
+### Original Query Example
+
+<div class="flex w-full group items-end mr-4 px-4 py-2 rounded-lg bg-gray-200 text-gray-800 rounded-bl-none">
+Let's start study about relative pronouns.. I was struggling to understand "whom" and "whose" yesterday
+</div>
+
+### Optimized Query
+
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-green-500 to-teal-400 text-white rounded-br-none">
+Function Call: query_optimizer
+optimized_query:
+Output: relative pronouns, whom, whose, grammar, August 11, 2024
+</div>
+
+Memory Reference searches vector store using the optimized query. We use Firestore database for the vector database, and then Gemini will summarize and recall memories related to the user query.
+
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-green-500 to-teal-400 text-white rounded-br-none">
+
+Function Call: memory_reference<br></br>
+core_memories: 
+```json
+{
+  "persona": {
+    "name": "Jin",
+    "age": 30,
+    "occupation": "Programmer",
+    "interests": ["coding", "technology", "video games", "reading", "traveling"],
+    "skills": ["Java", "Python", "JavaScript", "SQL", "Problem-solving"],
+    "personality_traits": ["analytical", "curious", "detail-oriented", "humorous", "friendly"],
+    "favorite_languages": ["Python", "JavaScript"],
+    "hobbies": ["playing video games", "building side projects", "reading tech blogs", "hiking", "photography"]
+  },
+  "goals": {
+    "professional": ["Become a senior software engineer within the next 2 years", "Contribute to open-source projects regularly", "Learn and master a new programming language", "Get certified in cloud computing (e.g., AWS, Azure)", "Develop a personal project that gains a significant user base"],
+    "personal": ["Travel to at least three new countries within the next 5 years", "Read at least 12 books each year", "Maintain a healthy work-life balance", "Learn a new hobby, such as playing a musical instrument or cooking", "Improve physical fitness through regular exercise"],
+    "educational": ["Complete a Master’s degree in Computer Science or related field", "Attend at least one tech conference or workshop annually", "Take online courses in advanced algorithms and data structures", "Stay updated with the latest technology trends and advancements", "Join a local tech meetup group to network and learn from peers"]
+  },
+  "system_prompt": "You are a strict and educational teacher. Maintain an educational and disciplined attitude. Provide thorough and in-depth answers to questions. Offer learning materials or assignments to encourage users to learn."
+}
+```
+
+Summarized Recall Memories:  
+Concept: Relative pronouns are used to connect sentences by providing additional information about a noun or pronoun. They help make sentences longer and more complex while reducing unnecessary repetition.
+
+Details:
+
+- Who: Used for people as the subject of the clause.
+- Whom: Used for people as the object of the clause. Often replaced by "who" in modern English.
+- Whose: Used to show possession.
+- Which: Used for animals and objects.
+- That: Used for people, animals, and objects, and can replace "who," "whom," or "which."
+
+Emotional Context:
+
+- Learning about relative pronouns can be a satisfying experience, especially when understanding how they contribute to complex sentences.
+- The examples provided are designed to make learning fun and engaging, fostering a sense of accomplishment when successfully completing the exercises.
+
+Personal Values:
+
+- This knowledge is valuable because it enhances communication skills and understanding of grammar, leading to more effective and sophisticated writing.
+- The clear explanation and practical examples demonstrate a preference for accessible and engaging learning materials.
+
+Note: This summary reflects the information stored in the provided memory. It does not include any context about ongoing projects, preferences, or needs, as the memory itself does not contain such information.
+</div>
+
+## Reasoning
+
+The Reasoning section involves the system's thought process when addressing the user's query. It analyzes the context of the user's struggle, in this case with the relative pronouns "whom" and "whose," and determines the most effective way to provide support. By recognizing that the user, Jin, finds these concepts tricky, the system decides to provide clear explanations, examples, and an exercise to reinforce understanding. Additionally, the system tailors the response to Jin's personality, acknowledging his love for challenges, by including a small assignment that aligns with his preferences.
+
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-green-500 to-teal-400 text-white rounded-br-none">
+
+Function Call: Reasoning<br></br>
+Thought: Okay, Jin is having trouble with "whom" and "whose." These are tricky, even for native English speakers. Since he's struggling, I need to be extra clear and thorough. 
+I'll explain each one, give examples, and then provide a short exercise to test his understanding. 
+According to his core memory, Jin loves a good challenge, so adding a small assignment at the end will resonate with his personality.
+
+</div>
+
+## Final Answer
+<div class="w-full ml-4 px-4 py-2 rounded-lg inline-block bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-br-none">
+Jin, I understand you are having some difficulty with "whom" and "whose." Many people find these relative pronouns confusing, so don't worry, we will conquer them together!
+
+Let's start with "whom." "Whom" is used as the object of a verb or preposition. Think of it as the "receiving" end of an action. For example, "To whom did you give the book?" In this case, the book is being given to someone, making "whom" the object of the preposition "to." It's important to remember that while "whom" is grammatically correct, in modern English, "who" often replaces it in casual conversation.
+
+Now, let's move on to "whose." "Whose" indicates possession. It's used to ask (or tell) to whom something belongs. For instance, "Whose book is this?" In this sentence, we are inquiring about the owner of the book.
+
+To make this clearer, let's look at some more examples:
+
+Whom:
+
+The programmer whom I met at the conference was very knowledgeable. (Object of the verb "met")
+She is the designer with whom I collaborated on the project. (Object of the preposition "with")
+Whose:
+
+The car, whose engine was sputtering, finally came to a stop. (Possession - the engine belongs to the car)
+The student whose project won first place was overjoyed. (Possession - the project belongs to the student)
+Now, to solidify your understanding, try this short exercise:
+
+Fill in the blanks with the correct relative pronoun ("whom" or "whose"):
+
+The musician, ______ latest album topped the charts, is going on tour.
+To ______ should I address this letter?
+The team ______ project was selected will present their findings tomorrow.
+Take your time, and we can review your answers together. Remember, practice makes perfect!
+</div>
+
+## All in One
+<div class="w-full">
+<video controls preload="none">
+  <source src="/content/chat.mp4" type="video/mp4" />
+</video>
+</div>
