@@ -89,6 +89,8 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
 
   const createFolder = async () => {
     if (!newFolderName.trim()) return;
+    const pathSegments = rowData.path.split("/");
+    const parentPath = pathSegments[pathSegments.length - 1];
 
     const newFolderId = uuidv4(); // 고유 ID 생성
     await addFolder(
@@ -96,7 +98,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
       newFolderId,
       "FOLDER",
       rowData.path,
-      rowData.path.split("/")[2], // parent_path는 현재 폴더의 경로를 사용
+      parentPath, // parent_path는 현재 폴더의 경로를 사용
       userId,
       rootFile
     );
