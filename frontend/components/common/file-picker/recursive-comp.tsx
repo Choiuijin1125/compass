@@ -44,6 +44,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
   updateCheckItems,
 }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [isAddFolderOpen, setIsAddFolderOpen] = useState(false);
   const [newFolderName, setNewFolderName] = useState(""); // 폴더 이름 상태
   console.log(newFolderName, "newFolderName");
   const collectAllItemIds = (
@@ -106,6 +107,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
       userId,
       rootFile
     );
+    setIsAddFolderOpen(false)
 
     setNewFolderName(""); // 폴더 이름 입력창 초기화
   };
@@ -158,7 +160,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
 
         {rowData.file_type === "FOLDER" && (
           <div className="flex items-center">
-            <Dialog>
+            <Dialog open={isAddFolderOpen} onOpenChange={setIsAddFolderOpen}>
               <DialogTrigger>
                 <FolderPlus />
               </DialogTrigger>
@@ -166,8 +168,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
                 <DialogHeader>
                   <DialogTitle>Create new folder</DialogTitle>
                   <DialogDescription>
-                    This action cannot be undone. This will permanently delete
-                    your account and remove your data from our servers.
+                    
                   </DialogDescription>
                   <div className="flex w-full max-w-sm items-center space-x-2">
                     <Input
@@ -176,7 +177,7 @@ const RecursiveComp: React.FC<RecursiveCompProps> = ({
                       value={newFolderName}
                       onChange={(e) => setNewFolderName(e.target.value)}
                     />
-                    <Button onClick={createFolder}>Create</Button>
+                    <Button disabled={newFolderName.trim() === ""} onClick={createFolder}>Create</Button>
                   </div>
                 </DialogHeader>
               </DialogContent>
