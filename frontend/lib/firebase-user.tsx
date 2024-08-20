@@ -75,8 +75,7 @@ const FirebaseUserProvider: React.FC<FirebaseUserProviderProps> = ({
 
   return (
     <FirebaseUserContext.Provider value={user}>
-      {isDocsPath && children}
-      {user?.isSignedIn === true && children}
+      {(user?.isSignedIn === true || isDocsPath) && children}
       {user?.isSignedIn === false && <SignInContainer />}
       {/* {isDocsPath ? (
         children
