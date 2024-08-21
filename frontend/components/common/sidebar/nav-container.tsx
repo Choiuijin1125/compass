@@ -5,6 +5,7 @@ import Image from "next/image";
 import UserButton from "../sidebar/user-button";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "../theme-toggle";
+import { Badge } from "@/components/ui/badge"
 
 const NavContainer = () => {
   const router = useRouter();
@@ -17,6 +18,12 @@ const NavContainer = () => {
           <Image src="/icon/mark_black.svg" alt="" width={24} height={24} />
           Compass
         </p>
+        <Badge 
+          className="cursor-pointer self-end" 
+          onClick={() => router.push("/docs")}
+        >
+          docs
+        </Badge>
         <p className="title font-bold text-xl mb-3">Threads</p>
         <Button
           className="flex items-center justify-start gap-2 w-[216px]"
