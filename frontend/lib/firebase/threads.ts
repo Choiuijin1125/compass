@@ -13,12 +13,14 @@ import {
 import { useContext, useEffect, useMemo, useState } from "react";
 import { FirebaseUserContext } from "../firebase-user";
 
-export const createThread = async (uid: string, userMsg: string) => {
+export const createThread = async (uid: string, userMsg: string, memoryState: any) => {
   const firestore = getFirestore();
   const threadsCollection = collection(firestore, `users/${uid}/threads`);
 
   const threadDoc = await addDoc(threadsCollection, {
     createTime: new Date(),
+    core_memory_files: memoryState.core_memory_files,
+    recall_memory_files: memoryState.recall_memory_files
   });
 
   const messagesCollection = collection(
