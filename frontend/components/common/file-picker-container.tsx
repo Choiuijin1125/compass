@@ -1,9 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { useFetchTreeData } from "@/hooks/use-file-fetch";
 import { useFirestoreUpdates } from "@/hooks/use-file-upload";
 import { fileUpload } from "@/lib/firebase/files";
 import { FileExplorerProps, FileData } from "@/types/file";
 import RecursiveComp from "./file-picker/recursive-comp";
+import { memoryContext } from "@/app/memory-reducer";
 
 const FileExplorer: React.FC<FileExplorerProps> = ({
   userId,
@@ -51,6 +52,20 @@ const FileExplorer: React.FC<FileExplorerProps> = ({
   const createFolder = async () => {
     // Logic for creating a new folder
   };
+
+  const [memoryState, memoryDispatch] = useContext(memoryContext)
+  useEffect(() => {
+    if(!threadId) {
+      //first main page
+      memoryDispatch({
+        payload: {
+          core_memory_files: rootFile === "core_memory_files" ? checkItems : memoryState.core_memory_files,
+          recall_memory_files: rootFile === "recall_memory_files" ? checkItems : memoryState.recall_memory_files,
+        }
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [threadId, checkItems])
 
   return (
     <div>
