@@ -13,7 +13,7 @@ const NavContainer = () => {
 
   return (
     <div className="side-container h-[100%] flex flex-col justify-between pb-6 min-w-[250px]">
-      <div className="side-top flex flex-col items-baseline p-6">
+      <div className="side-top max-h-[80%] flex flex-col items-baseline p-6">
         <p className="font-bold text-2xl mb-5 text-center flex justify-center items-center gap-2">
           <Image src="/icon/mark_black.svg" alt="" width={24} height={24} />
           Compass
