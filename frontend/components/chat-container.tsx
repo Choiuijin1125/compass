@@ -99,7 +99,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
     <div className="flex flex-col h-[96vh] w-full">
       <main 
         className={`
-          flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100
+          flex-1 overflow-y-auto p-4 space-y-4 bg-gray-100 dark:bg-[#0C0A09]
         
           scroll_conatiner
         `}
@@ -203,7 +203,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
         })}
       </main>
 
-      <footer className="flex items-center space-x-2 p-2 border-t border-gray-200 py-4 bg-gray-100">
+      <footer className="flex items-center space-x-2 p-2 border-t border-gray-200 py-4 bg-gray-100 dark:bg-[#0C0A09]">
         <form onSubmit={handleUserMessageSubmit} className="flex-1">
           <div className="flex items-center mt-2">
             <Input
