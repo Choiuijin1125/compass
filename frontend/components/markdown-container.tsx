@@ -17,6 +17,7 @@
 import React from "react";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
+import "@/components/markdown-style.css"
 
 export interface MarkdownContainerProps {
   markdown: string;
