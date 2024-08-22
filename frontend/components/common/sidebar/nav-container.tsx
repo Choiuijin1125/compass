@@ -18,12 +18,14 @@ const NavContainer = () => {
           <Image src="/icon/mark_black.svg" alt="" width={24} height={24} />
           Compass
         </p>
-        <Badge 
-          className="cursor-pointer self-end" 
-          onClick={() => router.push("/docs")}
-        >
-          docs
-        </Badge>
+        <div className="w-[216px] flex justify-end">
+          <Badge 
+            className="cursor-pointer" 
+            onClick={() => router.push("/docs")}
+          >
+            docs
+          </Badge>
+        </div>
         <p className="title font-bold text-xl mb-3">Threads</p>
         <Button
           className="flex items-center justify-start gap-2 w-[216px]"
