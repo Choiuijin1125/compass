@@ -23,11 +23,11 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       direction="horizontal"
       className="min-h-[200px] rounded-lg border"
     >
-      <ResizablePanel defaultSize={15} className="h-[99vh]">
+      <ResizablePanel defaultSize={15} className="h-[99.8vh]">
         <NavContainer/>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={65} className="h-[99vh]">
+      <ResizablePanel defaultSize={65} className="h-[99.8vh]">
       <div className="flex flex-col">
         <div className="flex h-full items-center justify-center p-6">
           {children}
@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ children }) => {
       </div>
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel defaultSize={20} className="h-[99vh]">
+      <ResizablePanel defaultSize={20} className="h-[99.8vh]">
         <MemoryContainer />
       </ResizablePanel>
     </ResizablePanelGroup>
