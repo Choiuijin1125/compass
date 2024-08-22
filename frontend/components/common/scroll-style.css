@@ -24,3 +24,32 @@
     background: transparent;
   }
 }
+
+.dark {
+  .scroll_conatiner {
+    /* 스크롤바의 폭 너비 */
+    &::-webkit-scrollbar {
+      width: 10px; /* 세로축 스크롤바 폭 너비  - 오른쪽 */
+      height: 10px; /* 가로축 스크롤바 폭 너비 - 아랫쪽 */
+    }
+
+    /* 스크롤바 */
+    &::-webkit-scrollbar-thumb {
+      background: #1f1f1f;
+      border-radius: 10px;
+      &:hover {
+        background: #606060;
+      }
+    }
+
+    /*스크롤바 뒷 배경*/
+    &::-webkit-scrollbar-track {
+      background-color: #555758;
+    }
+
+    /*상하 좌우스크롤바 만나는 코너*/
+    &::-webkit-scrollbar-corner {
+      background: transparent;
+    }
+  }
+}
