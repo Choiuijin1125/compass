@@ -29,7 +29,7 @@ const ThreadsList: React.FC = () => {
   }
 
   return (
-    <div className="h-[50%] overflow-y-auto scroll_conatiner flex flex-col items-start">
+    <div className="min-h-[50%] overflow-y-auto scroll_conatiner flex flex-col items-start">
       {threads.map((link, index) => {
         const isActive = currentPath === `/threads/${link.id}`;
 
