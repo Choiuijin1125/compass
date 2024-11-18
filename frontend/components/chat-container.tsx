@@ -21,6 +21,7 @@ import useAutoFocus from "@/hooks/use-auto-focus";
 import { FirestoreMessageData } from "@/types/message";
 import React from "react";
 import { Button } from "./ui/button";
+import { useMegaData } from "@/hooks/use-mega-data";
 
 export interface ChatContainerProps {
   messages: FirestoreMessageData[];
@@ -50,6 +51,24 @@ const ChatContainer: React.FC<ChatContainerProps> = ({
   onMessageDelete,
 }) => {
   "use client";
+
+  const [megaVlaue, setMegaVlaue] = React.useState<any>()
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const results = await useMegaData("강사"); // `await`로 Promise 해제
+      setMegaVlaue(results);
+      console.log("data", results);
+    };
+
+    fetchData(); // 비동기 함수 호출
+  }, []);
+  // const results = useMegaData("강사");
+  // results.then((res) => {
+  //   setMegaVlaue(res)
+  // })
+  // console.log("data",results)
+  console.log("megaVlaue",megaVlaue, JSON.stringify(megaVlaue))
 
   const [userMessage, setUserMessage] = React.useState("");
   const userMessageAutoFocus = useAutoFocus();
